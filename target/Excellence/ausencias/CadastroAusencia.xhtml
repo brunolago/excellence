@@ -1,0 +1,97 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="titulo">#{CadastroAusenciaBean.editando ? 'Edição de Ausência' : 'Novo Lançamento'}</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>#{CadastroAusenciaBean.editando ? 'Edição de Ausência' :
+			'Novo Lançamento'}</h1>
+
+		<f:metadata>
+			<o:viewParam name="ausencia"
+				value="#{cadastroAusenciaBean.ausencia}" />
+		</f:metadata>
+		<h:form>
+
+			<p:messages autoUpdate="true" closable="true" />
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:button value="Novo" outcome="/ausencias/CadastroAusencia" />
+					<p:commandButton value="Salvar" id="botaoSalvar"
+						action="#{cadastroAusenciaBean.salvar}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisa"
+						outcome="/ausencias/PesquisaAusencias" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
+
+				<p:outputLabel value="Data da Falta" id="dataFalta" />
+				<p:calendar value="#{cadastroAusenciaBean.ausencia.dataAusencia}"
+					label="Data final" pattern="dd/MM/yyyy" size="12" id="Data" locale="pt_BR" mask="true" />
+
+				<p:outputLabel value="Funcionário que Faltou:" id="Funcfaltou" />
+				<p:autoComplete id="FuncFaltou" size="40" dropdown="true" 
+					value="#{cadastroAusenciaBean.ausencia.funcionarioFaltou}" label="Funcionário que Faltou"
+					completeMethod="#{cadastroAusenciaBean.completarFuncionarios}"
+					var="funcionario" itemLabel="#{funcionario.nome}"
+					itemValue="#{funcionario}" forceSelection="true" />
+
+				<p:outputLabel value="Funcionário que irá Substituir"
+					id="FuncSubstituto"  />
+				<p:autoComplete for="FuncSubstituto" size="40" dropdown="true" 
+					value="#{cadastroAusenciaBean.ausencia.funcionarioSubstituto}" label="Funcionário Substituto"
+					completeMethod="#{cadastroAusenciaBean.completarFuncionarios}"
+					var="funcionario" itemLabel="#{funcionario.nome}" id="funcSubstituto"
+					itemValue="#{funcionario}" forceSelection="true" />
+
+				<p:outputLabel value="Condomínio" id="condominio" />
+				<p:autoComplete for="condominio" size="40" dropdown="true"
+					value="#{cadastroAusenciaBean.ausencia.condominio}" label="Condominio"
+					completeMethod="#{cadastroAusenciaBean.completarCondominios}"
+					var="condominio" itemLabel="#{condominio.nome}" id="Condominio"
+					itemValue="#{condominio}" forceSelection="true" />
+
+				<p:outputLabel value="Motivo" id="motivo" />
+				<p:selectOneMenu for="motivo" id="Motivo" label="Motivo" 
+					value="#{cadastroAusenciaBean.ausencia.motivo}" style="width: 110px">
+					<f:selectItem itemLabel="Selecione" />
+					<f:selectItems value="#{cadastroAusenciaBean.motivo}"
+						var="motivo" itemValue="#{motivo}" itemLabel="#{motivo.descricao}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Turno" id="turno" />
+				<p:selectOneMenu for="turno" id="Turno" label="Turno" 
+					value="#{cadastroAusenciaBean.ausencia.turno}" style="width: 110px">
+					<f:selectItem itemLabel="Selecione" />
+					<f:selectItems value="#{cadastroAusenciaBean.turno}" var="turno"
+						itemValue="#{turno}" itemLabel="#{turno.descricao}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Pago" id="pago" />
+				<p:selectOneRadio for="pago" layout="lineDirection" id="Pago" label="Campo Pago"
+					value="#{cadastroAusenciaBean.ausencia.pago}">
+					<f:selectItems value="#{cadastroAusenciaBean.pago}" var="pago"
+						itemValue="#{pago}" itemLabel="#{pago.descricao}" />
+				</p:selectOneRadio>
+
+				<p:outputLabel value="Desconto" id="desconto" />
+				<p:selectOneRadio for="desconto" layout="lineDirection"  id="Desconto" label="Desconto" 
+					value="#{cadastroAusenciaBean.ausencia.desconto}">
+					<f:selectItems value="#{cadastroAusenciaBean.desconto}"
+						var="desconto" itemValue="#{desconto}"
+						itemLabel="#{desconto.descricao}" />
+				</p:selectOneRadio>
+
+			</p:panelGrid>
+		</h:form>
+	</ui:define>
+</ui:composition>

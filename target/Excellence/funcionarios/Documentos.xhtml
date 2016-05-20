@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:panelGrid columns="6" id="painelDocumentos"
+		style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo, rotulo, campo, rotulo, campo">
+		
+		<p:outputLabel value="Identidade" for="identidade" />
+		<p:inputText id="identidade" size="30" maxlength="20"
+			value="#{cadastroFuncionarioBean.funcionario.identidade}" />
+
+		<p:outputLabel value="Orgão Emissor" for="emissor" />
+		<p:inputText id="emissor" size="10" maxlength="10" 
+		value="#{cadastroFuncionarioBean.funcionario.orgaoEmissor}" />
+
+		<p:outputLabel value="Data de Emissão" for="dataEmissao" />
+		<p:calendar label="Data Emissado" id="dataEmissao"
+			pattern="dd/MM/yyyy" size="12" mask="true" showOn="button" 
+			value="#{cadastroFuncionarioBean.funcionario.dataEmissao}" />
+			
+		<p:outputLabel value="Título Eleitor" for="titulo" />
+		<p:inputText id="titulo" size="30" maxlength="20"
+			value="#{cadastroFuncionarioBean.funcionario.titulo}" />
+
+		<p:outputLabel value="Zona" for="zona" />
+		<p:inputText id="zona" size="6" maxlength="6" 
+		value="#{cadastroFuncionarioBean.funcionario.zona}" />
+		
+		<p:outputLabel value="Seção" for="secao" />
+		<p:inputText id="secao" size="6" maxlength="6" 
+		value="#{cadastroFuncionarioBean.funcionario.secao}" />
+		
+		<p:outputLabel value="Carteira de Trabalho" for="ctps" />
+		<p:inputText id="ctps" size="30" maxlength="20"
+			value="#{cadastroFuncionarioBean.funcionario.ctps}" />
+
+		<p:outputLabel value="Série" for="serie" />
+		<p:inputText id="serie" size="6" maxlength="6" 
+		value="#{cadastroFuncionarioBean.funcionario.serie}" />
+		
+		<p:outputLabel value="UF CTPS" for="ufCtps" />
+		<p:inputText id="ufCtps" size="6" maxlength="6" requiredMessage="true"
+		value="#{cadastroFuncionarioBean.funcionario.ufCtps}" />
+		
+		<p:outputLabel value="CPF" for="cpf" />
+		<p:inputMask id="cpf" size="30" maxlength="20" mask="999.999.999-99"
+			value="#{cadastroFuncionarioBean.funcionario.cpf}" >
+			</p:inputMask>
+
+		<p:outputLabel value="CNH" for="cnh" />
+		<p:inputText id="cnh" size="30" maxlength="30" 
+		value="#{cadastroFuncionarioBean.funcionario.cnh}" />
+		
+		<p:outputLabel value="Reservista" for="reservista" />
+		<p:inputText id="reservista" size="30" maxlength="30" 
+		value="#{cadastroFuncionarioBean.funcionario.reservista}" />
+		
+
+	</p:panelGrid>
+
+</ui:composition>

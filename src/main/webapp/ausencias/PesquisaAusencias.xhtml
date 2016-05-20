@@ -1,0 +1,186 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisa de Ausências</ui:define>
+
+	<ui:define name="corpo">
+		<f:metadata>
+			<f:param name="dummy" />
+			<f:viewAction action="#{pesquisarAusenciaBean.pesquisarTodos}" />
+		</f:metadata>
+		<h:form id="formFunc">
+			<h1>Pesquisa de Ausências</h1>
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:button value="Novo" outcome="/ausencias/CadastroAusencia" />
+					<p:button value="Pagar" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:commandButton value="Pesquisar"
+						action="#{pesquisarAusenciaBean.pesquisarTodos}"
+						update=":formFunc:ausenciaTable" />
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:selectOneRadio id="situacao"
+						value="#{pesquisarAusenciaBean.pago}">
+						<f:selectItem itemLabel="Sim" itemValue="SIM" />
+						<f:selectItem itemLabel="Não" itemValue="NAO" />
+						<p:ajax event="keyup" update="@this" />
+					</p:selectOneRadio>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:growl autoUpdate="true" />
+			<p:dataTable id="ausenciaTable"
+				disabledSelection="#{pesquisarAusenciaBean.pagamentoFeito}"
+				selection="#{pesquisarAusenciaBean.ausenciasSelecionadas}"
+				rowKey="#{item.id}" draggableColumns="true"
+				value="#{pesquisarAusenciaBean.todasAusencias}" var="item"
+				style="margin-top: 20px" emptyMessage="Nenhuma ausência encontrada."
+				resizableColumns="true" rows="30" paginator="true"
+				paginatorAlwaysVisible="false" paginatorPosition="bottom">
+
+				<p:column selectionMode="multiple"
+					style="width:16px; text-align:center" />
+
+				<p:column headerText="Data" style="text-align: center; width: 100px"
+					sortBy="#{item.dataAusencia}" filterBy="#{item.dataAusencia}"
+					filterMatchMode="contains">
+					<h:outputText value="#{item.dataAusencia}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Funcionário que Faltou"
+					style="text-align: center; width: 250px"
+					filterBy="#{item.funcionarioFaltou.nome}"
+					filterMatchMode="contains">
+					<h:outputText value="#{item.funcionarioFaltou.nome}" />
+				</p:column>
+
+				<p:column headerText="Motivo"
+					style="text-align: center; width: 70px">
+					<h:outputText value="#{item.motivo.descricao}" />
+				</p:column>
+
+				<p:column headerText="Desconto"
+					style="text-align: center; width: 60px">
+					<h:outputText value="#{item.desconto eq 'SIM' ? 'Sim' : ''}" />
+				</p:column>
+
+				<p:column headerText="Substituto"
+					style="text-align: center; width: 150px"
+					filterBy="#{item.funcionarioSubstituto.nome}" sortBy="#{item.funcionarioSubstituto.nome}" 
+					filterMatchMode="contains">
+					<h:outputText value="#{item.funcionarioSubstituto.nome}" />
+				</p:column>
+
+				<p:column headerText="Pago" style="text-align: center; width: 60px">
+					<h:outputText value="#{item.pago eq 'SIM' ? 'Sim' : ''}" />
+				</p:column>
+
+				<p:column headerText="Local" sortBy="#{item.condominio.nome}"
+					style="text-align: center; width: 100px">
+					<h:outputText value="#{item.condominio.nome}" />
+				</p:column>
+
+				<p:column headerText="Turno" style="text-align: center; width: 60px">
+					<h:outputText value="#{item.turno.descricao}" />
+				</p:column>
+
+				<p:column style="text-align: center; width: 60px">
+					<p:button outcome="/ausencias/CadastroAusencia"
+						icon="ui-icon-pencil" title="Editar">
+						<f:param name="ausencia" value="#{item.id}" />
+					</p:button>
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						oncomplete="PF('confirmacaoExclusao').show()" process="@this"
+						update=":formFunc:confirmacaoExclusaoDialog"
+						disabled="#{seguranca.excluirAusencia}">
+						<f:setPropertyActionListener
+							target="#{pesquisarAusenciaBean.ausenciaSelecionado}"
+							value="#{item}" />
+					</p:commandButton>
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton process="ausenciaTable"
+						update=":formFunc:PagamentoDetail" icon="ui-icon-search"
+						value="Visualizar"
+						action="#{pesquisarAusenciaBean.passaAusenciaParaPagamento}"
+						oncomplete="PF('PagamentoDialog').show()" />
+				</f:facet>
+			</p:dataTable>
+
+			<p:confirmDialog header="Exclusão de Ausência"
+				message="Tem certeza que deseja excluir o Lançamento?"
+				widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+				<p:button value="Não"
+					onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim"
+					oncomplete="PF('confirmacaoExclusao').hide();"
+					action="#{pesquisarAusenciaBean.excluir}" process="@this"
+					update=":formFunc:ausenciaTable" />
+			</p:confirmDialog>
+
+			<p:dialog header="Pagamentos" widgetVar="PagamentoDialog"
+				modal="true" showEffect="fade" hideEffect="fade" resizable="true"
+				width="800">
+				<p:outputPanel id="PagamentoDetail" style="text-align:center;">
+					<p:panelGrid columns="4" id="painelPagamento"
+						style="width: 100%; margin-top: 20px"
+						columnClasses="rotulo, campo, rotulo, campo">
+						
+						<p:outputLabel value="Data" for="dataInicial" />
+						<p:calendar value="#{pesquisarAusenciaBean.pagamento.dataPagamento}"
+							label="Data Inicial" pattern="dd/MM/yyyy" size="12" disabled="true"
+							id="dataInicial" />
+
+						<p:outputLabel value="Funcionario" for="funcionario" />
+						<p:outputLabel 
+							value="#{pesquisarAusenciaBean.pagamento.funcionario}"
+							id="funcionario" />
+						<p:outputLabel value="Condominio" for="condominio" />
+						<p:outputLabel
+							value="#{pesquisarAusenciaBean.pagamento.condominio}"
+							id="condominio" />
+						<p:outputLabel value="Quantidade" for="quantidade" />
+						<p:outputLabel
+							value="#{pesquisarAusenciaBean.pagamento.quantidadeplantao}"
+							id="quantidade" />
+						<p:outputLabel value="Valor Plantão" for="vlrPlantao" />
+						<p:inputText id="vlrPlantao" size="10" maxlength="10"
+							styleClass="moeda"
+							value="#{pesquisarAusenciaBean.pagamento.valorPlantao}">
+							<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+							<p:ajax event="blur" update="vlrTotal"
+								listener="#{pesquisarAusenciaBean.calculaPlantao}" />
+						</p:inputText>
+
+						<p:outputLabel value="Total" for="vlrTotal" />
+						<h:outputText
+							value="#{pesquisarAusenciaBean.pagamento.valorTotal}"
+							id="vlrTotal">
+							<f:convertNumber type="currency" />
+						</h:outputText>
+					</p:panelGrid>
+					<p:outputLabel value="Plantões" for="plantoes" style="margin-top: 10px"/>
+						<p:inputTextarea value="#{pesquisarAusenciaBean.pagamento.plantoes}" cols="50" rows="4" disabled="true"
+							id="plantoes"  style="width: 100%; margin-top: 10px"/>
+					
+					<p:commandButton value="Finalizar Pagamento" style="margin-top: 20px"
+						oncomplete="PF('PagamentoDialog').hide();"
+						action="#{pesquisarAusenciaBean.salvarPagamento}" process="@this"
+						update="@form" />
+				</p:outputPanel>
+			</p:dialog>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,68 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:button value="Adicionar Desconto"
+		onclick="PF(`inclusaoDescontoDialog`).show(); return false;"
+		style="margin-top: 20px" />
+
+	<p:dataTable value="#{cadastroFuncionarioBean.funcionario.descontoFuncionario}"
+		id="descontoTable" var="item" style="margin-top: 20px"
+		emptyMessage="Nenhum desconto encontrado." rows="6" paginator="true"
+		paginatorAlwaysVisible="false" paginatorPosition="bottom">
+
+		<p:column headerText="Data" style="text-align: center; width: 200px">
+			<h:outputText
+				value="#{item.dataDesconto}">
+				<f:convertDateTime pattern="dd/MM/yyyy" />
+			</h:outputText>
+		</p:column>
+		<p:column headerText="Histórico"
+			style="text-align: left; width: 300px">
+			<h:outputText value="#{item.historico}" />
+		</p:column>
+		<p:column headerText="Valor" style="text-align: center; width: 150px">
+			<h:outputText value="#{item.valor}" />
+		</p:column>
+
+		<p:column style="text-align: center; width: 50px">
+			<p:commandButton icon="ui-icon-trash" title="Excluir"
+				oncomplete="PF('confirmacaoExclusao').show()" process="@this">
+				<!-- <f:setPropertyActionListener target="#{pesquisarFuncionarioBean.funcionarioSelecionado}" 
+	    					value="#{item}" />  -->
+			</p:commandButton>
+		</p:column>
+	</p:dataTable>
+	<p:dialog header="Inclusão de Desconto"
+		widgetVar="inclusaoDescontoDialog" modal="true" resizable="true">
+		<h:panelGroup id="inclusaoPanel">
+			<p:messages />
+
+			<h:panelGrid columns="2" id="painelDesconto"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
+
+				<p:outputLabel value="Data do Desconto" />
+				<p:calendar label="Data Descont" id="dataDesconto"
+					pattern="dd/MM/yyyy" size="12" value="#{cadastroFuncionarioBean.desconto.dataDesconto}" />
+
+
+				<p:outputLabel value="Hitórico" />
+				<p:inputText value="#{cadastroFuncionarioBean.desconto.historico}" size="80" maxlength="120" />
+
+				<p:outputLabel value="Valor" />
+					<p:inputText id="valor" size="10" maxlength="10"
+						styleClass="moeda"
+						value="#{cadastroFuncionarioBean.desconto.valor}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+					</p:inputText>
+			</h:panelGrid>
+
+			<p:commandButton value="Incluir" update="descontoTable"
+				oncomplete="PF(`inclusaoDescontoDialog`).hide()"
+				action="#{cadastroFuncionarioBean.adicionarDesconto}" />
+
+		</h:panelGroup>
+	</p:dialog>
+</ui:composition>

@@ -1,0 +1,68 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisa de Cargos</ui:define>
+
+	<ui:define name="corpo">
+		<f:metadata>
+			<f:param name="dummy" />
+			<f:viewAction action="#{pesquisarCargoBean.pesquisarTodos}" />
+		</f:metadata>
+		<h:form id="formFunc">
+			<h1>Pesquisa de Cargos</h1>
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:button value="Novo" outcome="/cargos/CadastroCargo" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:commandButton value="Pesquisar"
+						action="#{pesquisarCargoBean.pesquisarTodos}"
+						update=":formFunc:cargoTable" />
+				</p:toolbarGroup>
+			</p:toolbar>
+			<p:growl autoUpdate="true" />
+			<p:dataTable id="cargoTable"
+				value="#{pesquisarCargoBean.todosCargos}" var="item"
+				style="margin-top: 20px"
+				emptyMessage="Nenhum condomínio encontrado." rows="20"
+				paginator="true" paginatorAlwaysVisible="false"
+				paginatorPosition="bottom">
+
+				<p:column headerText="Cargo" style="text-align: left; width: 300px"
+					filterBy="#{item.nome}">
+					<h:outputText value="#{item.nome}" />
+				</p:column>
+
+				<p:column style="text-align: center; width: 50px">
+					<p:button outcome="/cargos/CadastroCargo" icon="ui-icon-pencil"
+						title="Editar">
+						<f:param name="cargo" value="#{item.id}" />
+					</p:button>
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						oncomplete="PF('confirmacaoExclusao').show()" process="@this"
+						update=":formFunc:confirmacaoExclusaoDialog">
+						<f:setPropertyActionListener
+							target="#{pesquisarCargoBean.cargoSelecionado}" value="#{item}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog header="Exclusão de Cargo"
+				message="Tem certeza que deseja excluir o Cargo #{pesquisarCargoBean.cargoSelecionado.nome}?"
+				widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+				<p:button value="Não"
+					onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim"
+					oncomplete="PF('confirmacaoExclusao').hide();"
+					action="#{pesquisarCargoBean.excluir}" process="@this"
+					update=":formFunc:cargoTable" />
+			</p:confirmDialog>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

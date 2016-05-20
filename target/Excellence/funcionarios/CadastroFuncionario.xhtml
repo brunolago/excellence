@@ -1,0 +1,48 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="titulo">#{cadastroFuncionarioBean.editando ? 'Edição de Funcionário' : 'Novo Funcionário'}</ui:define>
+
+	<ui:define name="corpo">
+		<h1>#{cadastroFuncionarioBean.editando ? 'Edição de Funcionário'
+			: 'Novo Funcionário'}</h1>
+
+		<f:metadata>
+			<o:viewParam name="funcionario"
+				value="#{cadastroFuncionarioBean.funcionario}" />
+				<f:viewAction action="#{cadastroFuncionarioBean.carregaCargosCondominios}" />
+		</f:metadata>
+		
+		<h:form id="frm" >
+			<p:messages autoUpdate="true" closable="true" />
+				<ui:include src="/funcionarios/Capa.xhtml" />
+
+			<p:tabView style="margin-top: 20px" >
+				<p:tab title="Enderedeço">
+					<ui:include src="/funcionarios/Enderecos.xhtml" />
+				</p:tab>
+				<p:tab title="Documentos">
+					<ui:include src="/funcionarios/Documentos.xhtml" />
+				</p:tab>
+
+				<p:tab title="Descontos">
+					<ui:include src="/funcionarios/Descontos.xhtml" />
+				</p:tab>
+
+				<p:tab title="Lanc. Férias">
+					<ui:include src="/funcionarios/Ferias.xhtml" />
+				</p:tab>
+				<p:tab title="Uniformes">
+					<ui:include src="/funcionarios/Uniformes.xhtml" />
+				</p:tab>
+				<p:tab title="Observação">
+					<ui:include src="/funcionarios/Observacoes.xhtml" />
+				</p:tab>
+			</p:tabView>
+		</h:form>
+	</ui:define>
+</ui:composition>

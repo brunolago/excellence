@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:button value="Registrar Entrega"
+		onclick="PF(`inclusaoUniformeDialog`).show(); return false;"
+		style="margin-top: 20px" />
+
+	<p:dataTable value="#{cadastroFuncionarioBean.funcionario.uniformes}"
+		id="uniformeTable" var="item" style="margin-top: 20px"
+		emptyMessage="Nenhum uniforme encontrado." rows="6" paginator="true"
+		paginatorAlwaysVisible="false" paginatorPosition="bottom">
+
+		<p:column headerText="Data" style="text-align: center; width: 100px">
+			<h:outputText
+				value="#{item.dataDeEntrega}">
+				<f:convertDateTime pattern="dd/MM/yyyy" />
+			</h:outputText>
+		</p:column>
+		<p:column headerText="Histórico"
+			style="text-align: left; width: 380px">
+			<h:outputText value="#{item.uniformeEntregue}" />
+		</p:column>
+
+		<p:column style="text-align: center; width: 50px">
+			<p:commandButton icon="ui-icon-trash" title="Excluir" disabled="true"
+				oncomplete="PF('confirmacaoExclusao').show()" process="@this">
+				<f:setPropertyActionListener target="#{cadastroFuncionarioBean.uniforme}" 
+	    					value="#{item}" />
+			</p:commandButton>
+		</p:column>
+	</p:dataTable>
+	
+		<p:confirmDialog header="Exclusão de Uniforme"
+				message="Tem certeza que deseja excluir"
+				widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+				<p:button value="Não"
+					onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim"
+					oncomplete="PF('confirmacaoExclusao').hide();"
+					action="#{cadastroFuncionarioBean.removerUniforme}" process="@this"
+					update="uniformeTable" />
+			</p:confirmDialog>
+	
+	
+	<p:dialog header="Registrar Entrega de Uniforme"
+		widgetVar="inclusaoUniformeDialog" modal="true" resizable="true">
+		<h:panelGroup id="inclusaoPanelUniforme">
+			<p:messages />
+
+			<h:panelGrid columns="2" id="painelUniforme"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
+
+				<p:outputLabel value="Data da Entrega" />
+				<p:calendar label="Data Entrega" id="dataEntrega"
+					pattern="dd/MM/yyyy" size="12" value="#{cadastroFuncionarioBean.uniforme.dataDeEntrega}" />
+
+
+				<p:outputLabel value="Hitórico" />
+				<p:inputText value="#{cadastroFuncionarioBean.uniforme.uniformeEntregue}" size="120" maxlength="120" />
+			</h:panelGrid>
+
+			<p:commandButton value="Incluir" update="uniformeTable"
+				oncomplete="PF(`inclusaoUniformeDialog`).hide()"
+				action="#{cadastroFuncionarioBean.adicionarUniforme}" />
+
+		</h:panelGroup>
+	</p:dialog>
+</ui:composition>

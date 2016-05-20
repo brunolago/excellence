@@ -1,0 +1,109 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<p:toolbar style="margin-top: 20px">
+		<p:toolbarGroup>
+			<p:button value="Novo" outcome="/funcionarios/CadastroFuncionario" />
+			<p:commandButton value="Salvar" id="botaoSalvar"
+				action="#{cadastroFuncionarioBean.salvar}" update="@form" />
+		</p:toolbarGroup>
+		<p:toolbarGroup align="right">
+			<p:button value="Pesquisa"
+				outcome="/funcionarios/PesquisaFuncionarios" />
+		</p:toolbarGroup>
+	</p:toolbar>
+	
+	<p:panelGrid columns="6" id="painel" 
+		style="width: 100%; margin-top: 20px"
+		columnClasses="rotulo, campo, rotulo, campo, rotulo, campo">
+
+		<p:outputLabel value="Nome" for="nome" />
+		<p:inputText id="nome" size="50" maxlength="80"
+			value="#{cadastroFuncionarioBean.funcionario.nome}">
+			<p:ajax event="blur" update="nome" />
+		</p:inputText>
+
+		<p:outputLabel value="Situação" for="situacao" />
+		<p:selectOneRadio id="situacao" layout="lineDirection"
+			label="Campo Situação"
+			value="#{cadastroFuncionarioBean.funcionario.situacao}">
+			<f:selectItems value="#{cadastroFuncionarioBean.situacao}"
+				var="situacao" itemValue="#{situacao}"
+				itemLabel="#{situacao.descricao}" />
+			<p:ajax listener="#{cadastroFuncionarioBean.informarDataDeDemissao}" />
+		</p:selectOneRadio>
+
+		<p:outputLabel value="Cargo" for="cargo" />
+		<p:selectOneMenu id="cargo"
+			value="#{cadastroFuncionarioBean.funcionario.cargo}">
+			<f:selectItem itemLabel="Selecione" />
+			<f:selectItems value="#{cadastroFuncionarioBean.listaCargos}"
+				var="cargo" itemValue="#{cargo}" itemLabel="#{cargo.nome}" />
+		</p:selectOneMenu>
+
+		<p:outputLabel value="Data de Admissão" for="dataAdmissao" />
+		<p:calendar label="Data admissão" id="dataAdmissao" mask="true"
+			value="#{cadastroFuncionarioBean.funcionario.dataAdmissao}"
+			pattern="dd/MM/yyyy" size="12" />
+
+		<p:outputLabel value="Sexo" for="sexo" />
+		<p:selectOneMenu for="sexo" id="sexo" label="Sexo"
+			value="#{cadastroFuncionarioBean.funcionario.sexo}">
+			<f:selectItem itemLabel="Selecione" />
+			<f:selectItems value="#{cadastroFuncionarioBean.sexo}" var="sexo"
+				itemValue="#{sexo}" itemLabel="#{sexo.descricao}" />
+		</p:selectOneMenu>
+
+		<p:outputLabel value="Estado Civil" for="estadoCivil" />
+		<p:selectOneMenu for="estadoCivil" id="estadoCivil"
+			style="width: 150px" label="Estado Civil"
+			value="#{cadastroFuncionarioBean.funcionario.estadoCivil}">
+			<f:selectItem itemLabel="Selecione" />
+			<f:selectItems value="#{cadastroFuncionarioBean.estadoCivil}"
+				var="estadoCivil" itemValue="#{estadoCivil}"
+				itemLabel="#{estadoCivil.descricao}" />
+		</p:selectOneMenu>
+
+		<p:outputLabel value="Telefone Residencial" />
+		<p:inputMask id="telefoneResidencial" size="15" maxlength="15"
+			mask="(99) 9999-9999"
+			value="#{cadastroFuncionarioBean.funcionario.telefoneResidencial}" />
+		<p:outputLabel value="Telefone Celular" />
+		<p:inputMask id="telefoneCelular" size="15" maxlength="15"
+			mask="(99) 9999-9999"
+			value="#{cadastroFuncionarioBean.funcionario.telefoneCelular}" />
+		<p:outputLabel value="Telefone Comercial" />
+		<p:inputMask id="telefoneComercial" size="15" maxlength="15"
+			mask="(99) 9999-9999"
+			value="#{cadastroFuncionarioBean.funcionario.telefoneComercial}" />
+
+		<p:outputLabel value="FOTO" />
+		<p:fileUpload
+			fileUploadListener="#{cadastroFuncionarioBean.enviaImagem}"
+			mode="advanced" auto="true" label="Selecionar" cancelLabel="Cancelar"
+			uploadLabel="Enviar" invalidSizeMessage="Arquivo Muito Grande"
+			invalidFileMessage="Formato de Arquivo Inválido" multiple="false"
+			sizeLimit="1000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+
+
+		<p:outputLabel value="PIS" for="pis" />
+		<p:inputText id="pis" size="16" maxlength="20"
+			style="font-weight: bold"
+			value="#{cadastroFuncionarioBean.funcionario.pis}" />
+
+		<p:outputLabel value="Condomínio" for="condominio" />
+		<p:selectOneMenu id="condominio" style="width: 280px"
+			value="#{cadastroFuncionarioBean.funcionario.condominio}">
+			<f:selectItem itemLabel="Selecione" />
+			<f:selectItems value="#{cadastroFuncionarioBean.listaCondominios}"
+				var="condominio" itemValue="#{condominio}"
+				itemLabel="#{condominio.nome}" />
+		</p:selectOneMenu>
+
+	</p:panelGrid>
+
+</ui:composition>

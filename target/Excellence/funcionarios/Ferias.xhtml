@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+	
+	<p:button value="Adicionar Férias"
+				onclick="PF(`inclusaoFeriasDialog`).show(); return false;"
+				style="margin-top: 20px" />
+				
+	<p:dataTable id="feriasTable" var="item" value="#{cadastroFuncionarioBean.funcionario.ferias}" 
+	style="margin-top: 20px"
+		emptyMessage="Nenhum férias encontrada." rows="6" paginator="true"
+		paginatorAlwaysVisible="false" paginatorPosition="bottom">
+
+		<p:column headerText="Data Inicial da Aquisição"
+			style="text-align: center; width: 200px" sortBy="#{item.dataInicioAquisitivo}">
+			<h:outputText value="#{item.dataInicioAquisitivo}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+		</p:column>
+		
+		<p:column headerText="Data Final da Aquisição" 
+			style="text-align: center; width: 200px">
+			<h:outputText value="#{item.dataFimAquisitivo}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+		</p:column>
+		
+		<p:column headerText=""
+			style="text-align: center; width:50px" >
+			<h:outputText value="--------" />
+		</p:column>
+		
+		<p:column headerText="Data Inicial do Gozo"
+			style="text-align: center; width: 200px">
+			<h:outputText value="#{item.dataInicioGozo}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+		</p:column>
+		
+		<p:column headerText="Data Final do Gozo"
+			style="text-align: center; width: 200px">
+			<h:outputText value="#{item.dataFimGozo}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+		</p:column>
+		
+
+		<p:column style="text-align: center; width: 50px">
+			<p:commandButton icon="ui-icon-trash" title="Excluir"
+				oncomplete="PF('confirmacaoExclusao').show()"
+				 process="@this" >
+	    				<!-- <f:setPropertyActionListener target="#{pesquisarFuncionarioBean.funcionarioSelecionado}" 
+	    					value="#{item}" />  -->
+			</p:commandButton>
+		</p:column>
+	</p:dataTable>
+		<p:dialog header="Lançamento de Férias"
+				widgetVar="inclusaoFeriasDialog" modal="true" resizable="true">
+				<h:panelGroup id="inclusaoPanelFerias">
+					<p:messages />
+
+					<h:panelGrid columns="2" id="painelFerias"
+						style="width: 100%; margin-top: 20px"
+						columnClasses="rotulo, campo">
+
+						<p:outputLabel value="Data Início Arquisição" />
+						<p:calendar label="Data ini aquisiçao" id="dataInicioAquisicao" mask="true"
+		    			pattern="dd/MM/yyyy" size="12" value="#{cadastroFuncionarioBean.ferias.dataInicioAquisitivo}" />
+		    			
+		    			<p:outputLabel value="Data Final Aquisição" />
+						<p:calendar label="Data fim aquisição" id="dataFimAquisicao" mask="true"
+		    			pattern="dd/MM/yyyy" size="12" value="#{cadastroFuncionarioBean.ferias.dataFimAquisitivo}"/>
+		    			
+		    			
+		    			<p:outputLabel value="Data Início Gozo" />
+						<p:calendar label="Data ini Gozo" id="dataInicioGozo" mask="true"
+		    			pattern="dd/MM/yyyy" size="12" value="#{cadastroFuncionarioBean.ferias.dataInicioGozo}"/>
+		    			
+		    			<p:outputLabel value="Data Final Gozo" />
+						<p:calendar label="Data fim Gozo" id="dataFimGozo" mask="true"
+		    			pattern="dd/MM/yyyy" size="12" value="#{cadastroFuncionarioBean.ferias.dataFimGozo}"/>
+
+					</h:panelGrid>
+
+					<p:commandButton value="Incluir" 
+						update="feriasTable"
+						oncomplete="PF(`inclusaoFeriasDialog`).hide()"
+						action="#{cadastroFuncionarioBean.adicionarFerias}" />
+					
+				</h:panelGroup>
+			</p:dialog>
+
+</ui:composition>

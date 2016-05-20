@@ -1,0 +1,48 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Pesquisa Usuários</ui:define>
+    
+    <ui:define name="corpo">
+    	<h:form>
+	    	<h1>Pesquisa Usuários</h1>
+	    	
+	    	<p:toolbar style="margin-top: 20px">
+	    		<p:toolbarGroup>
+	    			<p:button value="Pesquisar" outcome="/usuarios/PesquisaUsuarios" />
+	    		</p:toolbarGroup>
+	    		<p:toolbarGroup align="right">
+	    			<p:button value="Novo" outcome="/usuarios/CadastroUsuario"/>
+	    		</p:toolbarGroup>
+	    	</p:toolbar>
+	    	
+	    	<p:panelGrid columns="2" id="painel" style="width: 100%; margin-top: 20px"
+	    			columnClasses="rotulo, campo">
+	    		
+	    		<p:outputLabel value="Nome" />
+	    		<p:inputText size="40" />
+	    	</p:panelGrid>
+	    	
+	    	<p:dataTable id="usuariosTable" value="#{pesquisaUsuarioBean}" var="usuario"
+	    		style="margin-top: 20px" emptyMessage="Nenhum usuário encontrado."
+	    		rows="20" paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+	    	
+	    		<p:column headerText="Nome" style="text-align: center; width: 300px">
+	    			<h:outputText value="Supermercado João das Couves"/>
+	    		</p:column>
+	    		<p:column headerText="E-mail" style="text-align: center; width: 140px">
+	    			<h:outputText value="brunolago@oi.com.br"/>
+	    		</p:column>
+	    		<p:column style="text-align: center; width: 50px">
+	    			<p:button icon="ui-icon-pencil" title="Editar"/>
+	    			<p:button icon="ui-icon-trash" title="Excluir"/>
+	    		</p:column>
+	    	</p:dataTable>
+	    	
+    	</h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,29 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+	
+	<p:panelGrid columns="2" id="painel"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
+
+				<p:outputLabel value="Endereço" for="endereco" />
+				<p:inputText id="endereco" size="60" maxlength="80"
+					value="#{cadastroFuncionarioBean.funcionario.endereco}" />
+				
+				<p:outputLabel value="Bairro" for="bairro" />
+				<p:autoComplete id="bairro" size="40" maxlength="80"
+					value="#{cadastroFuncionarioBean.funcionario.bairro}" completeMethod="#{cadastroFuncionarioBean.sugerirBairro}"/>
+					
+				<p:outputLabel value="Cidade" for="cidade" />
+				<p:autoComplete id="cidade" size="40" maxlength="80"
+					value="#{cadastroFuncionarioBean.funcionario.cidade}" completeMethod="#{cadastroFuncionarioBean.sugerirCidade}"/>
+					
+				<p:outputLabel value="UF" for="uf" />
+				<p:inputText id="uf" size="35" maxlength="80"
+					value="#{cadastroFuncionarioBean.funcionario.uf}" />
+				<p:outputLabel value="CEP" for="cep" />
+				<p:inputText id="cep" size="35" maxlength="80"
+					value="#{cadastroFuncionarioBean.funcionario.cep}" />
+	</p:panelGrid>
+</ui:composition>

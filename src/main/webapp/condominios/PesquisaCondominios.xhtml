@@ -1,0 +1,141 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisa de Condomínios</ui:define>
+
+	<ui:define name="corpo">
+		<f:metadata>
+			<f:param name="dummy" />
+			<f:viewAction action="#{pesquisarCondominioBean.pesquisarTodos}" />
+		</f:metadata>
+		<h:form id="formFunc" target="_blank">
+			<h1>Pesquisa de Condomínios</h1>
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:button value="Novo" outcome="/condominios/CadastroCondominio" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:commandButton value="Pesquisar"
+						action="#{pesquisarCondominioBean.pesquisarTodos}"
+						update=":formFunc:condominioTable" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:selectOneRadio id="situacao"
+						value="#{pesquisarCondominioBean.situacao}">
+						<f:selectItem itemLabel="Ativo" itemValue="ATIVO" />
+						<f:selectItem itemLabel="Inativo" itemValue="INATIVO" />
+						<p:ajax event="keyup" update="@this" />
+					</p:selectOneRadio>
+				</p:toolbarGroup>
+			</p:toolbar>
+			<p:growl autoUpdate="true" />
+			<p:dataTable id="condominioTable"
+				value="#{pesquisarCondominioBean.todosCondominios}" var="item"
+				style="margin-top: 20px"
+				emptyMessage="Nenhum condomínio encontrado." rows="20"
+				paginator="true" paginatorAlwaysVisible="false"
+				paginatorPosition="bottom">
+
+				<p:column style="width:6px">
+					<p:rowToggler />
+				</p:column>
+				<p:column headerText="Condominio"
+					style="text-align: left; width: 300px" filterBy="#{item.nome}">
+					<h:outputText value="#{item.nome}" />
+				</p:column>
+				<p:column headerText="CNPJ"
+					style="text-align: left; width: 120px" filterBy="#{item.cnpj}">
+					<h:outputText value="#{item.cnpj}" />
+				</p:column>
+
+				<p:column style="text-align: center; width: 30px">
+					<p:button outcome="/condominios/CadastroCondominio"
+						icon="ui-icon-pencil" title="Editar">
+						<f:param name="condominio" value="#{item.id}" />
+					</p:button>
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						oncomplete="PF('confirmacaoExclusao').show()" process="@this"
+						update=":formFunc:confirmacaoExclusaoDialog">
+						<f:setPropertyActionListener
+							target="#{pesquisarCondominioBean.condominioSelecionado}"
+							value="#{item}" />
+					</p:commandButton>
+				</p:column>
+				<p:rowExpansion>
+						<p:panelGrid columns="4" id="painel"
+							style="width: 100%; margin-top: 20px"
+							columnClasses="rotulo, campo, rotulo, campo">
+
+							<p:outputLabel value="Nome" for="nome" />
+							<h:outputText id="nome" size="60" maxlength="80" required="true"
+								value="#{item.nome}" />
+
+							<p:outputLabel value="Situação" />
+							<h:outputText id="situacaoa" label="Campo Situação"
+								value="#{item.situacao}" />
+
+							<p:outputLabel value="CNPJ" for="cnpj" />
+							<h:outputText id="cnpj" size="30" maxlength="20"
+								mask="999.999.999-99"
+								value="#{item.cnpj}" />
+
+							<p:outputLabel value="Endereco" for="endereco" />
+							<h:outputText id="endereco" size="70" maxlength="20"
+								value="#{item.endereco}" />
+
+							<p:outputLabel value="Síndico" for="sindico" />
+							<h:outputText id="sindico" size="60" maxlength="200"
+								value="#{item.sindico}" />
+
+							<p:outputLabel value="Telefones" for="telefone" />
+							<h:outputText id="telefone" size="70" maxlength="200"
+								value="#{item.telefone}" />
+
+							<p:outputLabel value="Vencimento da Fatura" for="vencFatura" />
+							<h:outputText id="vencFatura" size="50" maxlength="80"
+								value="#{item.vencimentoFatura}" />
+
+							<p:outputLabel value="Contabilidade" for="contabilidade" />
+							<h:outputText id="contabilidade" size="60" maxlength="80"
+								value="#{item.contabilidade}" />
+
+							<p:outputLabel value="Valor Líquido" for="vlrLiquido" />
+							<h:outputText id="vlrLiquido" size="10" maxlength="10"
+								style="font-weight: bold"
+								value="#{item.valorLiquido}">
+								<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+							</h:outputText>
+
+							<p:outputLabel value="Valor Bruto" for="vlrBruto" />
+							<h:outputText id="vlrBruto" size="10" maxlength="10"
+								style="font-weight: bold"
+								value="#{item.valorBruto}">
+								<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+							</h:outputText>
+
+						</p:panelGrid>
+					</p:rowExpansion>
+				<f:facet name="footer">
+       			 #{pesquisarCondominioBean.quantidadeCondominio} Postos de Serviços
+    			</f:facet>
+			</p:dataTable>
+
+			<p:confirmDialog header="Exclusão de Condomínio"
+				message="Tem certeza que deseja excluir o Condomínio #{pesquisarCondominioBean.condominioSelecionado.nome}?"
+				widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+				<p:button value="Não"
+					onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim"
+					oncomplete="PF('confirmacaoExclusao').hide();"
+					action="#{pesquisarCondominioBean.excluir}" process="@this"
+					update=":formFunc:condominioTable" />
+			</p:confirmDialog>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

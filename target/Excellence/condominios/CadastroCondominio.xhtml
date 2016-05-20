@@ -1,0 +1,104 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="titulo">#{cadastroCondominioBean.editando ? 'Edição de Condomínio' : 'Novo Condomínio'}</ui:define>
+
+	<ui:define name="corpo">
+
+		<script>
+			function tratarInclusaoCliente(args) {
+				if (!args.validationFailed) {
+					inclusaoClienteDialog.hide();
+				}
+			}
+		</script>
+		<h1>#{cadastroCondominioBean.editando ? 'Edição de Condomínio' :
+			'Novo Condomínio'}</h1>
+
+		<f:metadata>
+			<o:viewParam name="condominio"
+				value="#{cadastroCondominioBean.condominio}" />
+		</f:metadata>
+		<h:form>
+
+			<p:messages id="msg" autoUpdate="true" closable="true" />
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:button value="Novo" outcome="/condominios/CadastroCondominio" />
+					<p:commandButton value="Salvar" id="botaoSalvar"
+						action="#{cadastroCondominioBean.salvar}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisa"
+						outcome="/condominios/PesquisaCondominios" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="4" id="painel"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo, rotulo, campo">
+
+				<p:outputLabel value="Nome" for="nome" />
+				<p:inputText id="nome" size="60" maxlength="80"
+					value="#{cadastroCondominioBean.condominio.nome}" />
+
+				<p:outputLabel value="Situação" for="situacao" />
+				<p:selectOneRadio id="situacao" layout="lineDirection"
+					label="Campo Situação"
+					value="#{cadastroCondominioBean.condominio.situacao}">
+					<f:selectItems value="#{cadastroCondominioBean.situacao}"
+						var="situacao" itemValue="#{situacao}"
+						itemLabel="#{situacao.descricao}" />
+				</p:selectOneRadio>
+
+				<p:outputLabel value="CNPJ" for="cnpj" />
+				<p:inputMask id="cnpj" size="30" maxlength="20" mask="999.999.999-99"
+					value="#{cadastroCondominioBean.condominio.cnpj}">
+				</p:inputMask>
+
+				<p:outputLabel value="Endereco" for="endereco" />
+				<p:inputText id="endereco" size="70" maxlength="20" 
+					value="#{cadastroCondominioBean.condominio.endereco}"/>
+
+				<p:outputLabel value="Síndico" for="sindico" />
+				<p:inputText id="sindico" size="60" maxlength="200"
+					value="#{cadastroCondominioBean.condominio.sindico}" />
+
+				<p:outputLabel value="Telefones" for="telefone" />
+				<p:inputText id="telefone" size="70" maxlength="200"
+					value="#{cadastroCondominioBean.condominio.telefone}" />
+
+				<p:outputLabel value="Vencimento da Fatura" for="vencFatura" />
+				<p:inputText id="vencFatura" size="50" maxlength="80"
+					value="#{cadastroCondominioBean.condominio.vencimentoFatura}" />
+
+				<p:outputLabel value="Contabilidade" for="contabilidade" />
+				<p:inputText id="contabilidade" size="60" maxlength="80"
+					value="#{cadastroCondominioBean.condominio.contabilidade}" />
+
+				<p:outputLabel value="Valor Líquido" for="vlrLiquido" />
+				<p:inputText id="vlrLiquido" size="10" maxlength="10" styleClass="moeda"
+					style="font-weight: bold"
+					value="#{cadastroCondominioBean.condominio.valorLiquido}">
+					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+				</p:inputText>
+
+				<p:outputLabel value="Valor Bruto" for="vlrBruto" />
+				<p:inputText id="vlrBruto" size="10" maxlength="10" styleClass="moeda"
+					style="font-weight: bold"
+					value="#{cadastroCondominioBean.condominio.valorBruto}">
+					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+				</p:inputText>
+
+				<h:outputLabel for="obs" value="Observações: " />
+				<p:inputTextarea id="obs"
+					value="#{cadastroCondominioBean.condominio.obs}" autoResize="true"
+					cols="60" />
+
+			</p:panelGrid>
+		</h:form>
+	</ui:define>
+</ui:composition>

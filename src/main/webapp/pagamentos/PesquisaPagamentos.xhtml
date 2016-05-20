@@ -1,0 +1,101 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisa de Ausências</ui:define>
+
+	<ui:define name="corpo">
+
+		<h:form id="formFunc">
+			<h1>Pesquisa de Ausências</h1>
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup align="left">
+					<p:commandButton value="Pesquisar"
+						action="#{pesquisarPagamentoBean.pesquisarTodos}"
+						update=":formFunc:pagamentoTable" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:growl autoUpdate="true" />
+			<p:panelGrid columns="2" id="painel" style="width: 100%; margin-top: 20px"
+	    			columnClasses="rotulo, campo">
+	    			<p:outputLabel value="Pesquisa por período" />
+	    		<h:panelGroup>
+	    			<p:calendar size="10" pattern="dd/MM/yyyy" mask="true"  showOn="button"
+	    				value="#{pesquisarPagamentoBean.filtro.dataInicio}" />
+	    			a
+	    			<p:calendar size="10" pattern="dd/MM/yyyy" mask="true" showOn="button"
+	    				value="#{pesquisarPagamentoBean.filtro.dataFim}" />
+	    		</h:panelGroup>
+	    	</p:panelGrid>
+			
+			<p:dataTable id="pagamentoTable" 
+				draggableColumns="true" 
+				value="#{pesquisarPagamentoBean.todasPagamentos}" var="item"
+				style="margin-top: 20px" emptyMessage="Nenhum pagamento encontrado."
+				resizableColumns="true" rows="30" paginator="true"
+				paginatorAlwaysVisible="false" paginatorPosition="bottom">
+				
+				<p:column style="width:16px">
+					<p:rowToggler />
+				</p:column>
+				
+				<p:column headerText="Funcionário" priority="2"
+					style="text-align: left; width: 120px"
+					filterBy="#{item.funcionario}"
+					filterMatchMode="contains">
+					<h:outputText value="#{item.funcionario}" />
+				</p:column>
+
+				<p:column headerText="Posto" priority="3"
+					style="text-align: center; width: 100px">
+					<h:outputText value="#{item.condominio}" />
+				</p:column>
+
+				<p:column headerText="Plantões" resizable="true" priority="1"
+					style="text-align: center; width: 250px">
+					<h:outputText value="#{item.plantoes}" />
+				</p:column>
+				
+				<p:column headerText="Valor do Plantão" priority="5"
+					style="text-align: center; width: 60px">
+					<h:outputText value="#{item.valorPlantao}">
+					<f:convertNumber type="currency"/>
+					</h:outputText>
+				</p:column>
+				
+				<p:column headerText="Valor total" priority="6"
+					style="text-align: center; width: 60px">
+					<h:outputText value="#{item.valorTotal}">
+					<f:convertNumber type="currency"/>
+					</h:outputText>
+				</p:column>
+
+				<p:column style="text-align: center; width: 60px">
+					<p:button disabled="true"
+						icon="ui-icon-pencil" title="Editar">
+					</p:button>
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						disabled="true">
+					</p:commandButton>
+				</p:column>
+				
+				<p:rowExpansion>
+				<p:panelGrid columns="4" id="painelPagamento"
+						style="width: 100%; margin-top: 20px"
+						columnClasses="rotulo, campo">
+						<p:outputLabel value="Plantões" for="plantoes" />
+						<h:inputTextarea value="#{item.plantoes}" disabled="true"
+							id="plantoes"  cols="120" rows="3"/>
+					</p:panelGrid>
+				</p:rowExpansion>
+			</p:dataTable>
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>

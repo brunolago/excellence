@@ -1,0 +1,45 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+
+	<ui:define name="titulo">Sitemas de Controle de Faltas/Extras</ui:define>
+
+	<ui:define name="corpo">
+		<div style="width: 500px; margin: auto; margin-top: 50px;">
+			<!-- <h:graphicImage library="images" name="excelence.png" /> -->
+
+			<h:form>
+				<p:dataTable id="feriasTable" emptyMessage="Precione o botão abaixo"
+					value="#{pesquisarFeriasBean.listaDeFerias}" var="item"
+					style="margin-top: 20px" rows="10" paginator="true"
+					paginatorAlwaysVisible="false" paginatorPosition="bottom">
+					<f:facet name="header">
+							Férias a vencer
+						</f:facet>
+					<p:column headerText="Funcionário"
+						style="text-align: left; width: 300px">
+						<h:outputText value="#{item.nomeDoFuncionario}" />
+					</p:column>
+
+					<p:column headerText="Ultimo prazo"
+						sortBy="#{item.ultimaDataParaFerias}"
+						style="text-align: center; width: 100px">
+						<h:outputText value="#{item.ultimaDataParaFerias}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+					<f:facet name="footer">
+						<p:commandButton action="#{pesquisarFeriasBean.pesquisarTodos}" 
+							update="feriasTable" value="Calcular Férias a Vencer"/>
+					</f:facet>
+				</p:dataTable>
+			</h:form>
+		</div>
+	</ui:define>
+
+</ui:composition>
